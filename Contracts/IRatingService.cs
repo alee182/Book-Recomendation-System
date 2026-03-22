@@ -2,8 +2,8 @@
 
 public interface IRatingService
 {
-    int CompareTo(int id);
-    bool NewRating(int isbn, RatingEnum rating, int memberId);
-    void ViewRating();
-    List<Book> GenerateRecommendations();
+    bool NewRating(int bookId, int memberId, RatingEnum rating);
+    List<Rating> ViewRating(int memberId);
+    int CompareTo(int otherMemberId);
+    List<Rating> GenerateRecommendations();
 }
