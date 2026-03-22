@@ -1,6 +1,4 @@
-﻿namespace DefaultNamespace;
-
-public interface IRatingRepository
+﻿public interface IRatingRepository
 {
     void AddRating(Rating rating);
     bool RemoveRating(Rating rating);

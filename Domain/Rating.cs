@@ -1,6 +1,4 @@
-﻿namespace DefaultNamespace;
-
-public class Rating
+﻿public class Rating
 {
     public Book Book { get; set; }
     public Member Member { get; set; }

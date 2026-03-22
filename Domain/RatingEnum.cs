@@ -1,6 +1,4 @@
-﻿namespace DefaultNamespace;
-
-public enum RatingEnum
+﻿public enum RatingEnum
 {
     VeryNegative = -5,
     Negative = -3,
