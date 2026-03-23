@@ -1,18 +1,23 @@
 ﻿public class Rating
 {
-    public Book Book { get; set; }
-    public Member Member { get; set; }
+    public int BookId { get; set; }
+    public int MemberId { get; set; }
     public RatingEnum RatingValue { get; set; }
 
-    public Rating(Book book, Member member, RatingEnum rating)
+    public Rating(int bookId, int memberId, RatingEnum rating)
     {
-        Book = book;
-        Member = member;
+        BookId = bookId;
+        MemberId = memberId;
         RatingValue = rating;
     }
 
-    public void DisplayInfo()
+    public void DisplayInfo(Book book, Member member)
     {
-        Console.WriteLine($"Book: {Book.Title}, Member: {Member.Name}, Rating: {RatingValue}");
+        Console.WriteLine($"Book: {book.Title}, Member: {member.Name}, Rating: {RatingValue}");
+    }
+
+	public void UpdateRating(RatingEnum newRating)
+    {
+        RatingValue = newRating;
     }
 }
