@@ -6,5 +6,5 @@ public interface IRatingRepository
 	bool RemoveRating(int memberId, int bookId);
 	Rating? GetRating(int memberId, int bookId);
 	List<Rating> GetAllForMember(int memberId);
-	List<Rating> GetAllRatings();
+	List<int> GetAllMemberIds();
 }
