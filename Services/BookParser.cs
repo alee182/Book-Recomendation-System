@@ -7,6 +7,16 @@ public class BookParser : Parser
 	// First auto-generated ISBN value; increments by 1 for each parsed book.
 	public int IsbnStartValue { get; set; } = 100;
 
+	public BookParser()
+	{
+	}
+
+	public BookParser(string inputFilePath)
+	{
+		FileParse(inputFilePath);
+		Conversion();
+	}
+
 	/// <summary>
 	/// Converts ParsedFile into Book objects and stores them in the Books list.
 	/// </summary>

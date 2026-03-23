@@ -9,7 +9,7 @@ public class MemberService : IMemberService
 
     public MemberService(IMemberRepository memberRepositroy)
     {
-        _memberRepositroy = memberRepsitory;
+        _memberRepositroy = memberRepositroy;
     }
 
     public void Loggin(int account)

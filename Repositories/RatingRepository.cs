@@ -1,6 +1,4 @@
-﻿namespace DefaultNamespace;
-
-public class RatingRepository : IRatingRepository
+﻿public class RatingRepository : IRatingRepository
 {
     // memberId -> (ISBN -> rating)
     private readonly Dictionary<int, Dictionary<int, Rating>> _ratings;
@@ -17,7 +15,6 @@ public class RatingRepository : IRatingRepository
         int bookId = rating.BookId;
 
         //if member doesn't exist, create new dictionary for their rating to be added to.
-        //https://learn.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2.TryGetValue?view=net-10.0
         if (!_ratings.TryGetValue(memberId, out var memberRatings))
         {
             memberRatings = new Dictionary<int, Rating>();

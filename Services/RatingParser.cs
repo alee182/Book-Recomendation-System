@@ -5,6 +5,16 @@ public class RatingParser : Parser
 {
 	public Dictionary<string, List<int>> RatingDic { get; } = new Dictionary<string, List<int>>();
 
+	public RatingParser()
+	{
+	}
+
+	public RatingParser(string inputFilePath)
+	{
+		FileParse(inputFilePath);
+		Conversion();
+	}
+
 	/// <summary>
 	/// Converts ParsedFile into a dictionary of member name to ratings list.
 	/// </summary>

@@ -53,7 +53,7 @@ public class MemberRepository : IMemberRepository
 
     public Member? GetMemberID(string username)
     {
-        Member? getMember = Members.Find(member => member.name == username);
+        Member? getMember = Members.Find(member => member.Name == username);
 
         return getMember;
 

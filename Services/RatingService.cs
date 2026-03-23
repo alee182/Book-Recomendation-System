@@ -78,8 +78,8 @@ public class RatingService : IRatingService
             }
         }
 
-        //INCORRECT SYNTAX AND INCOMPLETe
-        List<Book> bestMatchRatings = _bookRepo.GetAllForMember(mostSimilarMember);
+        //INCORRECT SYNTAX AND INCOMPLETE - needs ratingRepo reference, not bookRepo
+        //List<Book> bestMatchRatings = _bookRepo.GetAllForMember(mostSimilarMember);
         
         //list books where they really liked (5):
         Console.WriteLine("Here are the books they really liked:");
