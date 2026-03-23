@@ -1,38 +1,61 @@
 public class MemberRepository : IMemberRepository
 {
     public List<Member> Members {get;} = new List<Member>();
+
+    int IdCount = 0;
+
+    public MemberRepository(List<Member> members, int idcount)
+    {
+        Members = members;
+        IdCount = idcount;
+    }
+
     public void AddMember(string name, int ID)
     {
         Members.Add(new Member(name, ID, false));
+        IdCount += 1;
     }
 
-    public void RemoveMember(int ID)
+    public bool RemoveMember(int ID)
     {
-        Members.RemoveAll(member => member.ID == ID);
-
-    }
-
-    public void UpdateMember(string name, int ID)
-    {
-        foreach (Member member in Members)
+        Member? removeMember = Members.Find(member => member.ID == ID);
+        if (removeMember == null)
         {
-            if (member.ID == ID)
-            {
-                member.Name = name;
-            }
+            return false;
         }
+
+        Members.Remove(removeMember);
+
+        return true;
+
+    }
+
+    public bool UpdateMember(string name, int ID)
+    {
+        Member? updateMember = Members.Find(member => member.ID == ID);
+        if (updateMember == null)
+        {
+            return false;
+        }
+
+        updateMember.Name = name;
+
+        return true;
+
     }
 
     public Member? GetMemberByID(int ID)
     {
-        foreach (Member member in Members)
-        {
-            if (member.ID == ID)
-            {
-                return member;
-            }
-        }
+        Member? getMember = Members.Find(member => member.ID == ID);
 
-        return null;
+        return getMember;
+    }
+
+    public Member? GetMemberID(string username)
+    {
+        Member? getMember = Members.Find(member => member.name == username);
+
+        return getMember;
+
     }
 }

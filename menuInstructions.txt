@@ -1,0 +1,15 @@
+************** MENU **************
+* 1. Add a new member            *
+* 2. Add a new book              *
+* 3. Login                       *
+* 4. Quit                        *
+**********************************
+
+************** MENU **************
+* 1. Add a new member            *
+* 2. Add a new book              *
+* 3. Rate book                   *
+* 4. View ratings                *
+* 5. See recommendations         *
+* 6. Logout                      *
+**********************************
