@@ -1,22 +1,21 @@
-﻿namespace Book_Recomendation_System.Services;
-
-using System.Collections.Generic;
-using System.Linq;
+﻿namespace DefaultNamespace;
 
 public class RatingService : IRatingService
 {
     private readonly int _memberId;
     private readonly IRatingRepository _ratingRepo;
+    private readonly IBookRepository _bookRepo;
 
-    public RatingService(int memberId, IRatingRepository ratingRepo)
+    //
+    public RatingService(int memberId, IRatingRepository ratingRepo, IBookRepository bookRepo)
     {
         _memberId = memberId;
         _ratingRepo = ratingRepo;
+        _bookRepo = bookRepo;
     }
-
+    //
     public bool NewRating(int bookId, int memberId, RatingEnum rating)
     {
-        // Optional: only allow the current member to create their own rating
         if (memberId != _memberId)
         {
             return false;
@@ -26,80 +25,69 @@ public class RatingService : IRatingService
         _ratingRepo.AddRating(newRating);
         return true;
     }
-
-    public List<Rating> ViewRating(int memberId)
+    //
+    public List<Rating> ViewRatings(int memberId)
     {
         return _ratingRepo.GetAllForMember(memberId);
     }
 
     public int CompareTo(int otherMemberId)
     {
+        //current user's ratings
         List<Rating> currentMemberRatings = _ratingRepo.GetAllForMember(_memberId);
+        //Who we are comparing's ratings
         List<Rating> otherMemberRatings = _ratingRepo.GetAllForMember(otherMemberId);
-
+        int dotProduct = 0;
+        //if either empty, return 0
         if (currentMemberRatings.Count == 0 || otherMemberRatings.Count == 0)
         {
             return 0;
         }
 
-        Dictionary<int, RatingEnum> currentRatingsByBook = currentMemberRatings
-            .ToDictionary(r => r.BookId, r => r.RatingValue);
-
-        int similarityScore = 0;
-
-        foreach (Rating otherRating in otherMemberRatings)
+        //dot product logic.
+        for(int i =  0; i < currentMemberRatings.Count; i++)
         {
-            if (currentRatingsByBook.TryGetValue(otherRating.BookId, out RatingEnum currentRatingValue))
-            {
-                // Higher score when ratings are closer together
-                int difference = System.Math.Abs((int)currentRatingValue - (int)otherRating.RatingValue);
-                similarityScore += 5 - difference;
-            }
+            dotProduct += ((int)currentMemberRatings[i].RatingValue * (int)otherMemberRatings[i].RatingValue);
         }
 
-        return similarityScore;
+        return dotProduct;
     }
-
-    public List<Rating> GenerateRecommendations()
+// for GenerateRecommendations, use compareTo inside for each member to get dot product, before returning best dot product
+    public void GenerateRecommendations()
     {
-        List<Rating> allRatings = _ratingRepo.GetAllRatings();
         List<Rating> currentMemberRatings = _ratingRepo.GetAllForMember(_memberId);
+        List<int> memberIds = _ratingRepo.GetAllMemberIds();
 
-        HashSet<int> booksAlreadyRated = currentMemberRatings
-            .Select(r => r.BookId)
-            .ToHashSet();
+        int? mostSimilarMember = null;
+        int? bestDotProduct = null;
 
-        HashSet<int> otherMemberIds = allRatings
-            .Where(r => r.MemberId != _memberId)
-            .Select(r => r.MemberId)
-            .ToHashSet();
-
-        int bestMatchId = -1;
-        int bestScore = int.MinValue;
-
-        foreach (int otherMemberId in otherMemberIds)
+        foreach (int memberId in memberIds )
         {
-            int score = CompareTo(otherMemberId);
-
-            if (score > bestScore)
+            if (memberId == _memberId)
             {
-                bestScore = score;
-                bestMatchId = otherMemberId;
+                continue;
+            }
+            
+
+            int similarity = CompareTo(memberId);
+
+            if (similarity > bestDotProduct)
+            {
+                bestDotProduct = similarity;
+                mostSimilarMember = memberId;
             }
         }
 
-        if (bestMatchId == -1)
-        {
-            return new List<Rating>();
-        }
-
-        List<Rating> bestMatchRatings = _ratingRepo.GetAllForMember(bestMatchId);
-
-        List<Rating> recommendations = bestMatchRatings
-            .Where(r => !booksAlreadyRated.Contains(r.BookId))
-            .Where(r => r.RatingValue > RatingEnum.Neutral)
-            .ToList();
-
-        return recommendations;
+        //INCORRECT SYNTAX AND INCOMPLETe
+        List<Book> bestMatchRatings = _bookRepo.GetAllForMember(mostSimilarMember);
+        
+        //list books where they really liked (5):
+        Console.WriteLine("Here are the books they really liked:");
+        //for each book in the list, if rating == 5, consolewriteline book info.
+        
+        
+        //list books where they liked (3);
+        Console.WriteLine("Here are the books they liked:");
+        //for each book in the list, if rating == 3, consolewriteline book info.
     }
 }
