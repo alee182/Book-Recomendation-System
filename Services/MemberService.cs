@@ -3,16 +3,17 @@ public class MemberService : IMemberService
 
     private readonly IMemberRepository _memberRepositroy;
 
-    private int memberID = 0;
+    public int memberID = 0;
 
-    public Member? CurrentUser; 
+    public Member? CurrentUser {get; private set;}
 
     public MemberService(IMemberRepository memberRepositroy)
     {
         _memberRepositroy = memberRepositroy;
     }
 
-    public void Loggin(int account)
+
+    public void Login(int account)
     {
         CurrentUser = _memberRepositroy.GetMemberByID(account);
     }
@@ -27,5 +28,7 @@ public class MemberService : IMemberService
         memberID += 1;
 
         _memberRepositroy.AddMember(name, memberID);
+
+
     }
 }

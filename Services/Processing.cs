@@ -4,7 +4,7 @@ public class Processing : IProcessing
 {
 	public RatingParser RatingParse { get; set; }
 	public BookParser BookParse { get; set; }
-	public int IdCount { get; set; } = 1200;
+	public int IdCount { get; set; } = 1;
 
 	public Processing(string ratingFilePath, string bookFilePath)
 	{
@@ -33,7 +33,7 @@ public class Processing : IProcessing
 			members.Add(new Member(name, currentId, false));
 			currentId++;
 		}
-
+		IdCount = currentId;
 		return new MemberRepository(members, IdCount);
 	}
 
