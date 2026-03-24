@@ -25,7 +25,12 @@ public class RatingService : IRatingService
         _ratingRepo.AddRating(newRating);
         return true;
     }
-    //
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="memberId"></param>
+    /// <returns></returns>
     public List<Rating> ViewRatings(int memberId)
     {
         return _ratingRepo.GetAllForMember(memberId);
@@ -33,61 +38,109 @@ public class RatingService : IRatingService
 
     public int CompareTo(int otherMemberId)
     {
-        //current user's ratings
-        List<Rating> currentMemberRatings = _ratingRepo.GetAllForMember(_memberId);
-        //Who we are comparing's ratings
-        List<Rating> otherMemberRatings = _ratingRepo.GetAllForMember(otherMemberId);
-        int dotProduct = 0;
-        //if either empty, return 0
-        if (currentMemberRatings.Count == 0 || otherMemberRatings.Count == 0)
-        {
-            return 0;
-        }
+        List<Rating> currentRatings = _ratingRepo.GetAllForMember(_memberId);
+        List<Rating> otherRatings = _ratingRepo.GetAllForMember(otherMemberId);
 
-        //dot product logic.
-        for(int i =  0; i < currentMemberRatings.Count; i++)
+        int dotProduct = 0;
+
+        foreach (Rating current in currentRatings)
         {
-            dotProduct += ((int)currentMemberRatings[i].RatingValue * (int)otherMemberRatings[i].RatingValue);
+            foreach (Rating other in otherRatings)
+            {
+                if (current.BookId == other.BookId)
+                {
+                    dotProduct += (int)current.RatingValue * (int)other.RatingValue;
+                }
+            }
         }
 
         return dotProduct;
     }
 // for GenerateRecommendations, use compareTo inside for each member to get dot product, before returning best dot product
+    /// <summary>
+    /// 
+    /// </summary>
     public void GenerateRecommendations()
     {
-        List<Rating> currentMemberRatings = _ratingRepo.GetAllForMember(_memberId);
         List<int> memberIds = _ratingRepo.GetAllMemberIds();
 
-        int? mostSimilarMember = null;
-        int? bestDotProduct = null;
+        //storing most similar member and the respective dot product
+        int? mostSimilarMemberId = null;
+        int bestDotProduct = int.MinValue;
 
-        foreach (int memberId in memberIds )
+        //finding the best match
+        foreach (int memberId in memberIds)
         {
             if (memberId == _memberId)
-            {
                 continue;
-            }
-            
 
-            int similarity = CompareTo(memberId);
+            int dotProduct = CompareTo(memberId);
 
-            if (similarity > bestDotProduct)
+            if (dotProduct > bestDotProduct)
             {
-                bestDotProduct = similarity;
-                mostSimilarMember = memberId;
+                bestDotProduct = dotProduct;
+                mostSimilarMemberId = memberId;
             }
         }
+        //if no match
+        if (mostSimilarMemberId == null || bestDotProduct <= 0)
+        {
+            Console.WriteLine("No recommendations available.");
+            return;
+        }
+        
+        // Ratings for our user, and the best match
+        List<Rating> currentRatings = _ratingRepo.GetAllForMember(_memberId);
+        List<Rating> bestMatchRatings = _ratingRepo.GetAllForMember(mostSimilarMemberId.Value);
+        
+        //Listing their highest rated books.
+        Console.WriteLine("Books they really liked:");
 
-        //INCORRECT SYNTAX AND INCOMPLETE - needs ratingRepo reference, not bookRepo
-        //List<Book> bestMatchRatings = _bookRepo.GetAllForMember(mostSimilarMember);
+        foreach (Rating bestRating in bestMatchRatings)
+        {
+            //check if current user rated it.
+            bool alreadyRated = false;
+
+            foreach (Rating current in currentRatings)
+            {
+                if (current.BookId == bestRating.BookId)
+                {
+                    alreadyRated = true;
+                    break;
+                }
+            }
+
+            // then display book info if not and rated VeryPositive by best match.
+            if (!alreadyRated && bestRating.RatingValue == RatingEnum.VeryPositive)
+            {
+                Book? book = _bookRepo.GetBookById(bestRating.BookId);
+
+                book.DisplayInfo();
+            }
+        }
         
-        //list books where they really liked (5):
-        Console.WriteLine("Here are the books they really liked:");
-        //for each book in the list, if rating == 5, consolewriteline book info.
-        
-        
-        //list books where they liked (3);
-        Console.WriteLine("Here are the books they liked:");
-        //for each book in the list, if rating == 3, consolewriteline book info.
+        //Do the same for Books rated Positive.
+        Console.WriteLine("Books they liked:");
+
+        foreach (Rating bestRating in bestMatchRatings)
+        {
+            bool alreadyRated = false;
+
+            foreach (Rating current in currentRatings)
+            {
+                if (current.BookId == bestRating.BookId)
+                {
+                    alreadyRated = true;
+                    break;
+                }
+            }
+
+            if (!alreadyRated && bestRating.RatingValue == RatingEnum.Positive)
+            {
+                Book? book = _bookRepo.GetBookById(bestRating.BookId);
+                
+                book.DisplayInfo();
+            }
+        }
     }
 }

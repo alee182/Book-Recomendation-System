@@ -1,6 +1,6 @@
 ﻿public class RatingRepository : IRatingRepository
 {
-    // memberId -> (ISBN -> rating)
+    // KEYS: memberId -> bookId -> rating
     private readonly Dictionary<int, Dictionary<int, Rating>> _ratings;
         
     public RatingRepository(Dictionary<int, Dictionary<int, Rating>> ratings)
