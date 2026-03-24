@@ -6,7 +6,7 @@ obj/
 .vs/
 *.user
 *.suo
-
+.vscode/
 # Rider
 .idea/
 
@@ -16,3 +16,4 @@ obj/
 # OS files
 .DS_Store
 Thumbs.db
+
