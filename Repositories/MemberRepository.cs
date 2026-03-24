@@ -1,18 +1,18 @@
 public class MemberRepository : IMemberRepository
 {
-    public List<Member> Members {get;} = new List<Member>();
+    public List<Member> Members {get; private set;} = new List<Member>();
 
-    int IdCount = 0;
+    public int IdCount = 0;
 
     public MemberRepository(List<Member> members, int idcount)
     {
-        Members = members;
+        Members = members ?? new List<Member>();;
         IdCount = idcount;
     }
 
     public void AddMember(string name, int ID)
     {
-        Members.Add(new Member(name, ID, false));
+        Members.Add(new Member(name, IdCount, false));
         IdCount += 1;
     }
 

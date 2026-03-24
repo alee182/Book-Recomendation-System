@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace;
+﻿
 
 public class RatingService : IRatingService
 {
