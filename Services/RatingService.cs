@@ -2,9 +2,14 @@
 
 public class RatingService : IRatingService
 {
+    //Current user's memberId
     private readonly int _memberId;
+    //ratingRepository
     private readonly IRatingRepository _ratingRepo;
+    //BookRepository
     private readonly IBookRepository _bookRepo;
+    //MemberRepository
+    private readonly IMemberRepository _memberRepo;
 
     //
     public RatingService(int memberId, IRatingRepository ratingRepo, IBookRepository bookRepo)
@@ -89,9 +94,18 @@ public class RatingService : IRatingService
             return;
         }
         
+        //assigning member object based on matched id.
+        Member? match = _memberRepo.GetMemberByID((int)mostSimilarMemberId);
+        if (match == null)
+        {
+            Console.WriteLine("No recommendations available.");
+            return;
+        }
+        Console.WriteLine($"You have similar taste in books as {match.Name}!");
+        
         // Ratings for our user, and the best match
         List<Rating> currentRatings = _ratingRepo.GetAllForMember(_memberId);
-        List<Rating> bestMatchRatings = _ratingRepo.GetAllForMember(mostSimilarMemberId.Value);
+        List<Rating> bestMatchRatings = _ratingRepo.GetAllForMember((int)mostSimilarMemberId);
         
         //Listing their highest rated books.
         Console.WriteLine("Books they really liked:");
