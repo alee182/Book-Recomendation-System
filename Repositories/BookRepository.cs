@@ -5,6 +5,8 @@ public class BookRepository : IBookRepository
 {
 	public List<Book> BookList { get; private set; } = new List<Book>();
 
+	public int IsbnCount = 0;
+
 	public BookRepository()
 	{
 	}
@@ -17,11 +19,13 @@ public class BookRepository : IBookRepository
 		}
 
 		BookList = bookList;
+		IsbnCount = bookList.Count > 0 ? bookList[^1].IBSN + 1 : 0;
 	}
 
-	public void AddBook(int isbn, string author, string title, int year)
+	public void AddBook(string author, string title, int year)
 	{
-		BookList.Add(new Book(isbn, author, title, year));
+		BookList.Add(new Book(IsbnCount, author, title, year));
+		IsbnCount += 1;
 	}
 
 	public bool RemoveBook(int isbn)
@@ -48,5 +52,12 @@ public class BookRepository : IBookRepository
 		existingBook.Title = title;
 		existingBook.Year = year;
 		return true;
+	}
+
+	public Book? GetBookByID(int isbn)
+	{
+		Book? getBook = BookList.Find(book => book.IBSN == isbn);
+
+		return getBook;
 	}
 }
