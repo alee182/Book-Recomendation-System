@@ -1,4 +1,7 @@
-﻿public enum RatingEnum
+﻿/// <summary>
+/// Enum restricting the integer values that can be used to rate books.
+/// </summary>
+public enum RatingEnum
 {
     VeryNegative = -5,
     Negative = -3,
