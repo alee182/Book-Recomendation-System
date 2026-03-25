@@ -13,6 +13,7 @@ public class MemberRepository : IMemberRepository
     public void AddMember(string name, int ID)
     {
         Members.Add(new Member(name, IdCount, false));
+        Console.WriteLine($"{name} (account #: {IdCount}) was added.");
         IdCount += 1;
     }
 

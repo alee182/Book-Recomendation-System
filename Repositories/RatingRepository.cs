@@ -85,7 +85,7 @@ public class RatingRepository : IRatingRepository
         //if memberId found, return list of ratings
         if (_ratings.TryGetValue(memberId, out var memberRatings))
         {
-            return memberRatings.Values.ToList();
+            return memberRatings.Values.OrderBy(r => r.BookId).ToList();
         }
 
         //returns empty list

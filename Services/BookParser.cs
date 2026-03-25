@@ -5,7 +5,7 @@ public class BookParser : Parser
 {
 	public List<Book> Books { get; } = new List<Book>();
 	// First auto-generated ISBN value; increments by 1 for each parsed book.
-	public int IsbnStartValue { get; set; } = 100;
+	public int IsbnStartValue { get; set; } = 1;
 
 	public BookParser()
 	{

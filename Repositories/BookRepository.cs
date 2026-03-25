@@ -25,6 +25,7 @@ public class BookRepository : IBookRepository
 	public void AddBook(string author, string title, int year)
 	{
 		BookList.Add(new Book(IsbnCount, author, title, year));
+		Console.WriteLine($"{IsbnCount}, {author}, {title}, {year} was added.");
 		IsbnCount += 1;
 	}
 
